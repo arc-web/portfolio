@@ -1,0 +1,28 @@
+{
+  "name": "creative-director",
+  "version": "1.0.0",
+  "description": "Creative Director Agent for image generation and editing workflows",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "replicate": "^0.33.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "env": {
+    "REPLICATE_API_TOKEN": "required"
+  }
+}
