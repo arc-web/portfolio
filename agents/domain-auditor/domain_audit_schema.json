@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Domain Audit Report",
+  "type": "object",
+  "required": ["domain", "audit_timestamp", "registration", "hosting", "dns", "ssl"],
+  "properties": {
+    "domain": { "type": "string" },
+    "audit_timestamp": { "type": "string", "format": "date-time" },
+    "registration": {
+      "type": "object",
+      "properties": {
+        "registrar": { "type": "string" },
+        "registered_date": { "type": "string", "format": "date" },
+        "expiry_date": { "type": "string", "format": "date" },
+        "registrant_name": { "type": "string" },
+        "registrant_email": { "type": "string" },
+        "nameservers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "hosting": {
+      "type": "object",
+      "properties": {
+        "ip_address": { "type": "string" },
+        "ip_version": { "type": "integer", "enum": [4, 6] },
+        "provider": { "type": "string" },
+        "country": { "type": "string" },
+        "asn": { "type": "string" }
+      }
+    },
+    "dns": {
+      "type": "object",
+      "properties": {
+        "a_records": { "type": "array" },
+        "aaaa_records": { "type": "array" },
+        "mx_records": { "type": "array" },
+        "spf_record": { "type": "string" },
+        "dkim_records": { "type": "array" },
+        "caa_records": { "type": "array" }
+      }
+    },
+    "ssl": {
+      "type": "object",
+      "properties": {
+        "certificate_valid": { "type": "boolean" },
+        "issuer": { "type": "string" },
+        "not_before": { "type": "string", "format": "date-time" },
+        "not_after": { "type": "string", "format": "date-time" },
+        "grade": { "type": "string", "enum": ["A+", "A", "B", "C", "D", "F"] }
+      }
+    },
+    "tech_stack": {
+      "type": "object",
+      "properties": {
+        "web_server": { "type": "string" },
+        "cms": { "type": "string" },
+        "frameworks": { "type": "array", "items": { "type": "string" } },
+        "technologies": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "subdomains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "ip": { "type": "string" },
+          "provider": { "type": "string" }
+        }
+      }
+    },
+    "overall_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "findings": { "type": "array", "items": { "type": "object" } }
+  }
+}
