@@ -1,6 +1,5 @@
 """Type definitions for domain auditor."""
 from dataclasses import dataclass, asdict
-from datetime import datetime
 from typing import Optional, List, Dict, Any
 from enum import Enum
 
