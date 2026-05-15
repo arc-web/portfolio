@@ -116,9 +116,10 @@ Marketing Automation • CRM Development • AI Integration • Workflow Optimiz
 
 ## 💻 Tech Stack
 
-**Languages:** TypeScript, Python, Node.js, JavaScript
+**Languages:** TypeScript, Python, Rust, Node.js, JavaScript
 **AI & Automation:** Claude (Anthropic), MCP Protocol, n8n, Agent frameworks
 **Marketing Platforms:** Google Ads API, Facebook Ads, GoHighLevel
+**Infrastructure:** Cloudflare R2 / Workers, OpenBao secret management, Plane project management
 **Integrations:** Supabase, Google Drive, GitHub Actions
 **Community:** Skool platform, custom collaboration tools
 
@@ -127,10 +128,12 @@ Marketing Automation • CRM Development • AI Integration • Workflow Optimiz
 ## 🚀 Current Focus
 
 Working on:
-- Building MCP servers for business automation
-- n8n workflow development and optimization
-- Community platform architecture for StackPack
-- AI-powered marketing automation systems
+- Stealth browser automation for AI agents - `arc-browser` MCP + `camofox-browser` Firefox sidecar, public
+- Google Ads campaign management agent - active THHL search rebuild, HITL approval workflow
+- Cloudflare R2 client delivery pipeline - `cf-deploy` CLI, per-site repos, first site live (`therappc-site`)
+- OpenBao-backed credential infrastructure - `arcbao` sidecar pattern, container + host AppRoles
+- AI code review automation across org repos - `review-workflows` + `pr-agent-settings`
+- Claude Code skill library in version control - `claude-skills`, intake + audit pipelines
 
 ---
 
