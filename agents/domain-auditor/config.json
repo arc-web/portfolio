@@ -1,0 +1,18 @@
+{
+  "agent_name": "domain-auditor",
+  "version": "0.1.0",
+  "description": "Domain forensics and intelligence auditor",
+  "modules": {
+    "whois": { "enabled": true, "priority": 1 },
+    "dns": { "enabled": true, "priority": 2 },
+    "ssl": { "enabled": true, "priority": 3 },
+    "tech_stack": { "enabled": true, "priority": 4 },
+    "subdomains": { "enabled": true, "priority": 5 }
+  },
+  "api_keys": {
+    "whoisxml": "env:WHOISXML_API_KEY",
+    "shodan": "env:SHODAN_API_KEY"
+  },
+  "cache_ttl_seconds": 86400,
+  "timeout_seconds": 30
+}
