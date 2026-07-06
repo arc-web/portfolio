@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Footprint Sprint | Michael Ensor</title>
+  <link rel="icon" href="../assets/advertising-report-card-logo.png">
+  <style>
+    :root {
+      --ink: #101418;
+      --paper: #f8f7f2;
+      --panel: #ffffff;
+      --line: #d8d2c4;
+      --muted: #66706d;
+      --green: #0d6b57;
+      --gold: #c88d2d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    header, main, footer {
+      width: min(980px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+    header { padding: 54px 0 28px; }
+    a { color: var(--green); font-weight: 800; }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 74px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    .lede {
+      max-width: 760px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 19px;
+    }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 18px 0;
+    }
+    h2 { margin: 0 0 12px; font-size: 25px; }
+    ul { margin: 0; padding-left: 20px; }
+    li + li { margin-top: 8px; }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 118px;
+    }
+    .metric strong {
+      display: block;
+      color: var(--green);
+      font-size: 34px;
+      line-height: 1;
+    }
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer {
+      padding: 28px 0 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    @media (max-width: 760px) {
+      .metric-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .metric-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">Public sprint index</p>
+    <h1>Digital Footprint Sprint</h1>
+    <p class="lede">
+      This sprint turns Michael Ensor's websites, social profiles, WordPress archive,
+      YouTube content, outreach targets, and AI media needs into one public-facing
+      professional portfolio system.
+    </p>
+  </header>
+
+  <main>
+    <section aria-labelledby="metrics-title">
+      <h2 id="metrics-title">Current documented evidence</h2>
+      <div class="metric-grid">
+        <div class="metric"><strong>117</strong><span>ARC YouTube videos inventoried</span></div>
+        <div class="metric"><strong>618k</strong><span>transcript words indexed locally</span></div>
+        <div class="metric"><strong>55</strong><span>profile and media placeholders tracked</span></div>
+        <div class="metric"><strong>32</strong><span>testimonial and endorsement outreach rows planned</span></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="included-title">
+      <h2 id="included-title">What belongs in the repo</h2>
+      <ul>
+        <li>Public portfolio positioning, workshop copy, and channel-consistency guidance.</li>
+        <li>Sanitized sprint summaries, source indexes, and proof-acquisition plans.</li>
+        <li>Generated-output manifests that describe what exists without exposing raw private or sensitive material.</li>
+        <li>Documentation that explains what profile images, banners, vertical clips, and landscape videos still need source media.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="excluded-title">
+      <h2 id="excluded-title">What stays out until reviewed</h2>
+      <ul>
+        <li>Raw subtitle dumps and transcript chunks that include password-reset walkthroughs, private operational language, or unreviewed client context.</li>
+        <li>Credential paths, login notes, account IDs, and 1Password/OpenBao operational details.</li>
+        <li>Unapproved source photos, attendee footage, client screenshots, and voice reference files.</li>
+        <li>Any content that needs testimonial consent, client approval, or personal-image approval before publication.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="next-title">
+      <h2 id="next-title">Next documentation PR</h2>
+      <p>
+        The next PR adds sanitized Markdown summaries from the sprint folder, including
+        platform specs, profile copy, outreach strategy, media-generation needs, and
+        the transcript-engine seed summary. It will not add the raw subtitle archive.
+      </p>
+      <p><a href="../">Back to the portfolio hub</a></p>
+    </section>
+  </main>
+
+  <footer>
+    Public documentation excludes credentials, raw account notes, private client data, and unapproved media.
+  </footer>
+</body>
+</html>

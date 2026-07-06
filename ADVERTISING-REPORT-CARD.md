@@ -2,7 +2,7 @@
 
 **Founded 2019 | Miami, Florida**
 
-*Find the "Why" Behind Your Advertising ROI*
+*Find the "Why" Behind Your Advertising ROI, Then Turn the Proof Into Better Systems*
 
 [![Website](https://img.shields.io/badge/Website-FF6B6B?style=for-the-badge&logo=google-chrome&logoColor=white)](https://advertisingreportcard.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/advertising-report-card)
@@ -14,7 +14,7 @@
 
 ## 🎯 Mission
 
-We help businesses understand exactly what's working in their advertising and why. Through 24-hour campaign audits and optimization services, we provide actionable insights and improvement pathways that drive real results.
+We help businesses understand exactly what's working in their advertising and why. Through campaign audits, optimization services, tracking cleanup, and AI-enabled content systems, we turn advertising work into clear decisions, reusable proof, and better operating habits.
 
 ## 📊 Company Overview
 
@@ -45,6 +45,12 @@ Comprehensive 24-hour advertising health reports that identify:
 - **Consulting** - Strategic guidance for ad operations
 - **Technology Development** - Custom advertising tools and integrations
 
+### AI-Enabled Training and Proof Systems
+- **Executive Workshops** - Practical AI adoption sessions for leaders and operators
+- **Transcript Mining** - Converting YouTube, audit, and training archives into structured ideas and content
+- **Profile Alignment** - Website, LinkedIn, GitHub, YouTube, and social copy that all tell the same story
+- **Testimonial Engine** - Outreach systems for client reviews, LinkedIn endorsements, partner quotes, and event feedback
+
 ## 💡 What Makes Us Different
 
 ### Speed
@@ -63,7 +69,7 @@ We don't just tell you what's wrong - we explain the "why" behind performance is
 - Marketing Automation
 
 ### Technology
-We build our own tools and automation to deliver faster, more accurate insights than manual audits.
+We build our own tools and automation to deliver faster, more accurate insights than manual audits. The same system thinking now supports AI-first executive training, workshops, and portfolio proof-building.
 
 ## 🛠️ Technology & Specialties
 
@@ -83,7 +89,7 @@ We build our own tools and automation to deliver faster, more accurate insights 
 - Marketing automation workflows
 
 ### Core Specialties
-Google Ads • Facebook Ads • SEO • Conversion Rate Optimization • Conversion Tracking • Marketing Audits • Whitelabel Services • Agency Training • Marketing Automation
+Google Ads • Facebook Ads • SEO • Conversion Rate Optimization • Conversion Tracking • Marketing Audits • Whitelabel Services • Agency Training • Marketing Automation • AI Workshops • Proof Systems
 
 ## 👥 Who We Serve
 
@@ -134,6 +140,12 @@ Companies with internal marketing teams needing:
 - Ongoing support and resources
 - Group and individual options
 
+### AI Workshops and Executive Sessions - Custom Scope
+- C-suite AI operating brief
+- Team build sprint using company documents and workflows
+- Marketing systems seminar for agencies and growth teams
+- Profile and proof sprint for founders, consultants, and operators
+
 ## 📞 Contact & Get Started
 
 ### Get a Campaign Audit
@@ -162,11 +174,12 @@ Our tech stack includes:
 - Python & TypeScript for automation
 - Custom reporting and analytics platforms
 - CRM and marketing automation integrations
+- AI agents, transcript pipelines, and structured content extraction
 
 ## 📚 Resources & Content
 
 ### YouTube Channel
-Marketing tips, advertising tutorials, and campaign breakdowns
+Marketing tips, advertising tutorials, campaign breakdowns, and a growing transcript source library for future training and content systems
 
 ### Blog Posts
 Industry insights and advertising best practices on our website
