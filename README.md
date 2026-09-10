@@ -15,7 +15,7 @@
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/michaelensor/)
 
-📍 Miami, Florida | 📱 786-305-6363
+📍 Miami, Florida
 
 ---
 
@@ -119,8 +119,8 @@ Marketing Automation • CRM Development • AI Integration • Workflow Optimiz
 **Languages:** TypeScript, Python, Rust, Node.js, JavaScript
 **AI & Automation:** Claude (Anthropic), MCP Protocol, n8n, Agent frameworks
 **Marketing Platforms:** Google Ads API, Facebook Ads, GoHighLevel
-**Infrastructure:** Cloudflare R2 / Workers, OpenBao secret management, Plane project management
-**Integrations:** Supabase, Google Drive, GitHub Actions
+**Infrastructure:** Cloudflare, Plane project management
+**Integrations:** Google Drive, GitHub Actions
 **Community:** Skool platform, custom collaboration tools
 
 ---
@@ -131,7 +131,6 @@ Working on:
 - Stealth browser automation for AI agents - `arc-browser` MCP + `camofox-browser` Firefox sidecar, public
 - Google Ads campaign management agent - active THHL search rebuild, HITL approval workflow
 - Cloudflare R2 client delivery pipeline - `cf-deploy` CLI, per-site repos, first site live (`therappc-site`)
-- OpenBao-backed credential infrastructure - `arcbao` sidecar pattern, container + host AppRoles
 - AI code review automation across org repos - `review-workflows` + `pr-agent-settings`
 - Claude Code skill library in version control - `claude-skills`, intake + audit pipelines
 
@@ -159,7 +158,7 @@ Updates include:
 - Marketing automation consulting
 - Agency training and whitelabel services
 
-📧 [Contact via LinkedIn](https://www.linkedin.com/in/michaelensor/) | 📞 786-305-6363 | 🌐 [advertisingreportcard.com](https://advertisingreportcard.com)
+📧 [Contact via LinkedIn](https://www.linkedin.com/in/michaelensor/) | 🌐 [advertisingreportcard.com](https://advertisingreportcard.com)
 
 ### Join the Community
 - Collaborate on projects with experts
