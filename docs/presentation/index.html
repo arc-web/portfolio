@@ -1,711 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg: #07070F;
-  --surface: #0F0F1A;
-  --surface2: #16162A;
-  --border: rgba(255,255,255,0.07);
-  --text: #F0EEFF;
-  --muted: #7A728A;
-  --primary: #7B2FBE;
-  --primary-light: #A855F7;
-  --accent: #F5A623;
-  --teal: #14B8A6;
-  --blue: #3B82F6;
-  --green: #22C55E;
-  --pink: #EC4899;
-}
-
-html, body { width:100%; height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,'Inter','Segoe UI',sans-serif; overflow:hidden; }
-
-.cursor { position:fixed; width:10px; height:10px; background:var(--accent); border-radius:50%; pointer-events:none; z-index:9999; mix-blend-mode:screen; transform:translate(-50%,-50%); }
-.cursor-ring { position:fixed; width:36px; height:36px; border:1px solid rgba(245,166,35,0.35); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); }
-
-#slides { width:100vw; height:100vh; position:relative; overflow:hidden; }
-.slide { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; pointer-events:none; }
-.slide.active { opacity:1; pointer-events:all; }
-
-canvas#bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
-.slide-content { position:relative; z-index:2; width:min(1100px, calc(100vw - 120px)); margin:0 auto; text-align:center; }
-
-.eyebrow { font-size:12px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:20px; opacity:0; }
-h1 { font-size:clamp(40px,6vw,80px); font-weight:800; line-height:1.0; letter-spacing:-0.03em; margin-bottom:28px; opacity:0; max-width:100%; overflow-wrap:break-word; }
-h2 { font-size:clamp(32px,4.5vw,58px); font-weight:700; line-height:1.1; letter-spacing:-0.02em; margin-bottom:20px; opacity:0; max-width:100%; overflow-wrap:break-word; }
-.sub { font-size:clamp(15px,1.8vw,20px); color:var(--muted); line-height:1.65; max-width:700px; margin:0 auto 36px; opacity:0; }
-
-.grad { background:linear-gradient(135deg,var(--primary-light),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-
-.line { width:48px; height:3px; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:2px; margin:0 auto 28px; opacity:0; }
-
-.blob { position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:1; }
-
-/* Hero */
-.hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(123,47,190,0.15); border:1px solid rgba(123,47,190,0.4); border-radius:100px; padding:8px 20px; font-size:13px; font-weight:600; color:var(--primary-light); margin-bottom:32px; opacity:0; }
-.hero-badge::before { content:''; width:8px; height:8px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-.tag { display:inline-block; padding:6px 16px; border-radius:100px; font-size:13px; font-weight:600; letter-spacing:0.05em; border:1px solid rgba(123,47,190,0.5); background:rgba(123,47,190,0.1); color:var(--primary-light); margin:4px; opacity:0; }
-.tags-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; opacity:0; }
-
-/* Cards */
-.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; width:100%; margin:20px auto 0; justify-content:center; }
-.card { background:var(--surface); border:1px solid rgba(123,47,190,0.3); border-radius:16px; padding:28px 24px; text-align:left; opacity:0; position:relative; overflow:hidden; transition:border-color 0.3s; }
-.card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(123,47,190,0.08),transparent 60%); pointer-events:none; }
-.card:hover { border-color:rgba(245,166,35,0.5); }
-.card-icon { font-size:32px; margin-bottom:12px; display:block; }
-.card-title { font-size:16px; font-weight:700; margin-bottom:8px; }
-.card-desc { font-size:13px; color:var(--muted); line-height:1.5; }
-
-/* Stats */
-.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:32px; margin:32px auto 0; text-align:center; }
-.stat { opacity:0; }
-.stat-number { font-size:clamp(48px,6vw,80px); font-weight:800; letter-spacing:-0.04em; line-height:1; background:linear-gradient(135deg,var(--primary-light),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.stat-label { font-size:14px; color:var(--muted); margin-top:8px; text-transform:uppercase; letter-spacing:0.1em; }
-
-/* Steps */
-.steps { display:flex; flex-direction:column; gap:16px; text-align:left; max-width:640px; width:100%; margin:0 auto; }
-.step { display:flex; align-items:flex-start; gap:20px; background:var(--surface); border:1px solid rgba(123,47,190,0.2); border-radius:14px; padding:20px 24px; opacity:0; }
-.step-num { font-size:13px; font-weight:700; color:var(--accent); background:rgba(245,166,35,0.1); border:1px solid rgba(245,166,35,0.3); border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.step-text { font-size:16px; line-height:1.5; }
-.step-text strong { font-weight:700; }
-
-/* Compare */
-.compare { display:grid; grid-template-columns:1fr 1fr; gap:24px; width:100%; margin-top:16px; text-align:left; }
-.compare-col { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px; opacity:0; }
-.compare-col.good { border-color:rgba(34,197,94,0.2); }
-.compare-col.bad { border-color:rgba(239,68,68,0.2); }
-.compare-head { display:flex; align-items:center; gap:10px; font-size:16px; font-weight:700; margin-bottom:20px; }
-.check { color:var(--green); }
-.cross { color:#EF4444; }
-.compare-item { font-size:14px; color:var(--muted); line-height:1.5; padding:8px 0; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:flex-start; }
-.compare-item:last-child { border-bottom:none; }
-.compare-col.good .compare-item::before { content:'\2713'; color:var(--green); font-weight:700; flex-shrink:0; }
-.compare-col.bad .compare-item::before { content:'\2717'; color:#EF4444; font-weight:700; flex-shrink:0; }
-
-/* Code */
-.code-block { background:var(--surface2); border:1px solid rgba(123,47,190,0.3); border-radius:12px; padding:24px 28px; text-align:left; font-family:'Fira Code','Cascadia Code',monospace; font-size:15px; line-height:1.7; opacity:0; margin-top:24px; }
-.code-block .comment { color:#6A6A8A; }
-.code-block .keyword { color:#C084FC; }
-.code-block .string { color:#86EFAC; }
-
-/* Flow */
-.flow { display:flex; flex-direction:column; gap:12px; width:100%; max-width:800px; margin:0 auto; text-align:left; }
-.flow-step { display:flex; gap:20px; align-items:flex-start; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 22px; opacity:0; position:relative; }
-.flow-step::after { content:'\2193'; position:absolute; bottom:-20px; left:50%; transform:translateX(-50%); color:var(--border); font-size:14px; z-index:1; }
-.flow-step:last-child::after { display:none; }
-.flow-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-.flow-body { flex:1; }
-.flow-title { font-size:15px; font-weight:700; margin-bottom:4px; }
-.flow-desc { font-size:13px; color:var(--muted); line-height:1.5; }
-.flow-prompt { font-family:'Fira Code',monospace; font-size:12px; color:#A5B4FC; margin-top:8px; background:var(--surface2); border-radius:8px; padding:8px 12px; border:1px solid var(--border); }
-
-/* Quote */
-blockquote { font-size:clamp(20px,3vw,32px); font-weight:600; line-height:1.4; position:relative; max-width:800px; margin:0 auto; padding:0 0 0 48px; opacity:0; }
-blockquote::before { content:'\201C'; position:absolute; left:0; top:-10px; font-size:60px; color:var(--accent); font-family:Georgia,serif; line-height:1; }
-
-/* Timeline */
-.timeline { display:flex; flex-direction:column; gap:0; width:100%; max-width:800px; margin:0 auto; text-align:left; }
-.tl-node { display:flex; gap:20px; align-items:flex-start; opacity:0; }
-.tl-marker { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
-.tl-dot { width:36px; height:36px; border-radius:50%; background:var(--surface); border:2px solid rgba(123,47,190,0.4); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--muted); flex-shrink:0; transition:all 0.3s; }
-.tl-node.done .tl-dot { background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.5); color:#10B981; }
-.tl-track { width:2px; height:32px; background:linear-gradient(to bottom,rgba(123,47,190,0.3),transparent); margin-top:4px; }
-.tl-node:last-child .tl-track { display:none; }
-.tl-body { padding:4px 0 32px; }
-.tl-date { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
-.tl-title { font-size:16px; font-weight:700; margin-bottom:4px; }
-.tl-desc { font-size:13px; color:var(--muted); line-height:1.55; }
-
-/* Team */
-.team-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:20px; width:100%; margin:8px auto 0; justify-content:center; }
-.team-card { background:var(--surface); border:1px solid rgba(123,47,190,0.25); border-radius:16px; padding:24px 20px; text-align:center; opacity:0; transition:border-color 0.3s; }
-.team-card:hover { border-color:rgba(245,166,35,0.4); }
-.team-avatar { width:64px; height:64px; border-radius:50%; object-fit:cover; margin:0 auto 12px; display:block; border:2px solid rgba(123,47,190,0.3); }
-.team-avatar-placeholder { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; color:#fff; margin:0 auto 12px; }
-.team-name { font-size:15px; font-weight:700; margin-bottom:4px; }
-.team-role { font-size:12px; color:var(--accent); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:6px; }
-.team-note { font-size:12px; color:var(--muted); line-height:1.5; }
-
-/* Text + Image */
-.body-text { font-size:16px; color:var(--muted); line-height:1.7; max-width:700px; margin:0 auto; opacity:0; }
-.img-wrap { margin-top:24px; opacity:0; }
-
-/* Nav */
-#nav { position:fixed; right:32px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:8px; z-index:100; }
-.dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.15); cursor:pointer; border:none; padding:0; transition:all 0.3s; }
-.dot.active { background:var(--accent); transform:scale(1.5); }
-#counter { position:fixed; bottom:28px; right:32px; font-size:12px; color:var(--muted); z-index:100; }
-#hint { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); font-size:11px; color:rgba(122,114,138,0.4); z-index:100; letter-spacing:0.05em; white-space:nowrap; }
-#mute-dot { display:inline-block; width:5px; height:5px; border-radius:50%; background:rgba(122,114,138,0.4); margin-left:8px; vertical-align:middle; transition:background 0.2s; }
-#mute-dot.active { background:var(--accent); }
-#overlay { position:fixed; inset:0; background:var(--bg); z-index:50; pointer-events:none; opacity:0; }
-
-/* Autoplay */
-#play-btn { position:fixed; bottom:20px; left:28px; z-index:100; background:rgba(123,47,190,0.15); border:1px solid rgba(123,47,190,0.4); border-radius:100px; padding:7px 16px 7px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12px; font-weight:600; color:var(--primary-light); letter-spacing:0.05em; transition:background 0.2s,border-color 0.2s; }
-#play-btn:hover { background:rgba(123,47,190,0.28); border-color:rgba(123,47,190,0.7); }
-#play-btn svg { width:14px; height:14px; flex-shrink:0; }
-#play-btn.playing { background:rgba(245,166,35,0.12); border-color:rgba(245,166,35,0.4); color:var(--accent); }
-#play-btn.playing:hover { background:rgba(245,166,35,0.22); border-color:rgba(245,166,35,0.7); }
-#progress-bar { position:fixed; bottom:0; left:0; height:2px; width:0%; background:linear-gradient(90deg,var(--primary),var(--accent)); z-index:101; transition:none; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michael Ensor | AI-First Executive Training and Marketing Systems</title>
+  <meta name="description" content="Michael Ensor builds AI-first marketing, automation, and training systems for executives, agencies, and operators.">
+  <link rel="icon" href="assets/advertising-report-card-logo.png">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --ink: #101418;
+      --paper: #f8f7f2;
+      --panel: #ffffff;
+      --line: #d8d2c4;
+      --muted: #66706d;
+      --green: #0d6b57;
+      --gold: #c88d2d;
+      --red: #b94b3f;
+      --blue: #285c8f;
+      --black: #0b0d0f;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px clamp(20px, 4vw, 56px);
+      background: rgba(248, 247, 242, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border: 2px solid var(--black);
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      background: var(--gold);
+      color: var(--black);
+    }
+    nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    nav a { text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+    .hero {
+      min-height: 86vh;
+      display: grid;
+      align-items: end;
+      padding: clamp(96px, 14vh, 160px) clamp(20px, 4vw, 56px) clamp(44px, 7vh, 76px);
+      position: relative;
+      isolation: isolate;
+      background-image:
+        linear-gradient(90deg, rgba(11,13,15,0.88), rgba(11,13,15,0.58) 58%, rgba(11,13,15,0.2)),
+        url("assets/advertising-report-card-background.webp");
+      background-size: cover;
+      background-position: center;
+      color: #ffffff;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: clamp(24px, 8vw, 120px);
+      top: 18%;
+      width: min(360px, 32vw);
+      aspect-ratio: 1;
+      background: url("assets/advertising-report-card-logo.png") center / contain no-repeat;
+      filter: drop-shadow(0 24px 42px rgba(0,0,0,0.38));
+      opacity: 0.9;
+      z-index: -1;
+    }
+    .hero-inner {
+      width: min(1180px, 100%);
+    }
+    .eyebrow {
+      margin: 0 0 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 12px;
+      font-weight: 800;
+      color: #f3c06d;
+    }
+    h1 {
+      margin: 0;
+      max-width: 980px;
+      font-size: clamp(46px, 8vw, 104px);
+      line-height: 0.95;
+      letter-spacing: 0;
+      overflow-wrap: break-word;
+    }
+    .hero-copy {
+      max-width: 760px;
+      margin: 24px 0 0;
+      font-size: clamp(18px, 2.1vw, 24px);
+      color: rgba(255,255,255,0.84);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border: 1px solid currentColor;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .button.primary {
+      background: #ffffff;
+      color: var(--black);
+      border-color: #ffffff;
+    }
+    .button.secondary {
+      color: #ffffff;
+      background: rgba(255,255,255,0.08);
+    }
+    main section {
+      padding: clamp(50px, 8vw, 90px) clamp(20px, 4vw, 56px);
+    }
+    .section-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.55fr);
+      gap: clamp(24px, 5vw, 72px);
+      align-items: end;
+      margin-bottom: 28px;
+    }
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+    .section-lede {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .stat {
+      padding: 24px;
+      border-right: 1px solid var(--line);
+      min-height: 128px;
+    }
+    .stat:last-child { border-right: 0; }
+    .stat strong {
+      display: block;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1;
+      color: var(--green);
+    }
+    .stat span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .offer-grid, .proof-grid, .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      min-height: 210px;
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .tag {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      background: #fbfaf6;
+    }
+    .band {
+      background: var(--black);
+      color: #ffffff;
+    }
+    .band .section-lede,
+    .band .card p,
+    .band .tag { color: rgba(255,255,255,0.7); }
+    .band .card {
+      background: #161a1d;
+      border-color: rgba(255,255,255,0.16);
+    }
+    .band .tag {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.18);
+    }
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.7fr);
+      gap: clamp(24px, 5vw, 64px);
+      align-items: center;
+    }
+    .media-frame {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 18px 48px rgba(16,20,24,0.12);
+    }
+    .media-frame img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 130px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+    .timeline-item strong { color: var(--green); }
+    .timeline-item p { margin: 0; color: var(--muted); }
+    .cta {
+      background: var(--green);
+      color: #ffffff;
+    }
+    .cta .section-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .cta h2 { max-width: 720px; }
+    footer {
+      padding: 28px clamp(20px, 4vw, 56px);
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      background: #ffffff;
+    }
+    @media (max-width: 900px) {
+      .site-header { align-items: flex-start; flex-direction: column; }
+      .section-head, .split { grid-template-columns: 1fr; }
+      .stat-grid, .offer-grid, .proof-grid, .brand-grid { grid-template-columns: 1fr 1fr; }
+      .hero::after {
+        top: 120px;
+        right: 20px;
+        width: 170px;
+        opacity: 0.24;
+      }
+    }
+    @media (max-width: 620px) {
+      nav { gap: 10px; }
+      .hero { min-height: 78vh; }
+      .stat-grid, .offer-grid, .proof-grid, .brand-grid { grid-template-columns: 1fr; }
+      .stat { border-right: 0; border-bottom: 1px solid var(--line); }
+      .stat:last-child { border-bottom: 0; }
+      .timeline-item { grid-template-columns: 1fr; gap: 6px; }
+    }
+  </style>
 </head>
 <body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Michael Ensor portfolio home">
+      <span class="brand-mark">ME</span>
+      <span>Michael Ensor</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#offers">Workshops</a>
+      <a href="#proof">Proof</a>
+      <a href="#brands">Brands</a>
+      <a href="#content-engine">Content Engine</a>
+      <a href="digital-footprint-sprint/">Sprint Docs</a>
+      <a href="https://www.linkedin.com/in/michaelensor/">LinkedIn</a>
+    </nav>
+  </header>
 
-<canvas id="bg"></canvas>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursor-ring"></div>
-<div id="overlay"></div>
-
-<div id="slides">
-<div class="slide active" id="slide-1">
-    
-    <div class="blob" style="width:485.11559484259755px;height:516.8001483326013px;background:var(--primary);top:-115.88244004657469px;left:-102.46806292194782px;opacity:0.07"></div>
-    <div class="blob" style="width:354.66064178761053px;height:334.24629844065146px;background:var(--accent);bottom:-114.3417227513111px;right:-73.30208040583094px;opacity:0.06"></div>
-    <div class="slide-content">
-      <div class="hero-badge">ARC Web</div>
-      <h1>Portfolio<br><span class="grad">JavaScript</span></h1>
-      <div class="sub">Mike @ Arc Web - AI Automation & Marketing Technology</div>
-      <div class="tags-row"><span class="tag">JavaScript</span><span class="tag">Open Source</span></div>
-    </div>
-  </div>
-
-<div class="slide" id="slide-2">
-    
-    <div class="blob" style="width:515.7194376110225px;height:598.3496603438725px;background:var(--primary);top:-131.6894130632898px;right:-65.73254002204489px;opacity:0.07"></div>
-    <div class="blob" style="width:320.85955136092554px;height:417.4885860249472px;background:var(--accent);bottom:-107.17117405545564px;left:-63.46580878321897px;opacity:0.06"></div>
-    <div class="slide-content">
-      <div class="eyebrow">The problem</div>
-      <h2>What's <span class="grad">broken</span> without this</h2>
-      <div class="line"></div>
-      <div class="cards">
-    <div class="card">
-      <span class="card-icon">😤</span>
-      <div class="card-title">Ad performance opacity</div>
-      <div class="card-desc">Marketers spend hours digging through platform dashboards without understanding why campaigns underperform across channels.</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">💸</span>
-      <div class="card-title">Budget waste detection lag</div>
-      <div class="card-desc">Inefficient ad spend continues for weeks before someone manually audits accounts and identifies optimization opportunities.</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">🔁</span>
-      <div class="card-title">Conversion tracking gaps</div>
-      <div class="card-desc">Incomplete or misconfigured tracking prevents accurate ROI attribution, making it impossible to optimize toward actual business outcomes.</div>
-    </div></div>
-    </div>
-  </div>
-
-<div class="slide" id="slide-3">
-    
-    <div class="blob" style="width:487.8428564443322px;height:583.6071742095276px;background:var(--primary);top:-81.2274798974967px;left:-77.85559518629273px;opacity:0.07"></div>
-    <div class="blob" style="width:444.3147149935329px;height:356.4322266384437px;background:var(--accent);bottom:-73.93759258429228px;left:-47.25594478654116px;opacity:0.06"></div>
-    <div class="slide-content">
-      <div class="eyebrow">The difference</div>
-      <h2>Why it <span class="grad">matters</span></h2>
-      
-      <div class="compare">
-        <div class="compare-col bad">
-      <div class="compare-head"><span class="cross">✗</span> Without</div>
-      <div class="compare-item">Manual work</div><div class="compare-item">Slow iteration</div><div class="compare-item">Repeated mistakes</div>
-    </div>
-        <div class="compare-col good">
-      <div class="compare-head"><span class="check">✓</span> With this</div>
-      <div class="compare-item">Delivers findings in 24 hours instead of requiring manual weekly reviews</div><div class="compare-item">Identifies conversion tracking misconfigurations that platform dashboards don't surface</div><div class="compare-item">Provides whitelabel delivery so agencies can resell audits under their own brand</div>
-    </div>
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <p class="eyebrow">AI-first operator, trainer, and marketing systems builder</p>
+        <h1 id="hero-title">Michael Ensor</h1>
+        <p class="hero-copy">
+          I help executives, agencies, and operators turn scattered marketing work,
+          automation projects, and business knowledge into AI-powered operating systems,
+          training programs, and decision workflows.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="https://www.linkedin.com/in/michaelensor/">Book through LinkedIn</a>
+          <a class="button secondary" href="https://advertisingreportcard.com/">Advertising Report Card</a>
+          <a class="button secondary" href="#offers">View training formats</a>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-<div class="slide" id="slide-4">
-    
-    <div class="blob" style="width:488.88782596261655px;height:569.8886281591801px;background:var(--primary);top:-159.7688421585454px;right:-115.10372393080351px;opacity:0.07"></div>
-    <div class="blob" style="width:416.09984217582803px;height:433.6209795348992px;background:var(--accent);bottom:-103.72521826888061px;right:-48.3112380687362px;opacity:0.06"></div>
-    <div class="slide-content">
-      <div class="eyebrow">Under the hood</div>
-      <h2>How it <span class="grad">works</span></h2>
-      
-      <div class="flow">
-    <div class="flow-step">
-      <div class="flow-icon" style="background:rgba(123,47,190,0.12);border:1px solid rgba(123,47,190,0.2)">📥</div>
-      <div class="flow-body">
-        <div class="flow-title">Connect ad accounts</div>
-        <div class="flow-desc">User links Google Ads, Facebook Ads, and conversion tracking systems to the audit engine.</div>
-        
+    <section aria-labelledby="positioning-title">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2 id="positioning-title">The portfolio is now the operating proof.</h2>
+          <p class="section-lede">
+            The digital footprint sprint consolidated public profiles, WordPress content,
+            ARC YouTube inventory, outreach targets, AI media needs, and workshop positioning
+            into one system that can keep compounding.
+          </p>
+        </div>
+        <div class="stat-grid" aria-label="Portfolio evidence metrics">
+          <div class="stat"><strong>20+</strong><span>years across paid media, automation, and client operations</span></div>
+          <div class="stat"><strong>117</strong><span>Advertising Report Card YouTube videos inventoried for content mining</span></div>
+          <div class="stat"><strong>618k</strong><span>transcript words indexed as source material for future assets</span></div>
+          <div class="stat"><strong>32</strong><span>testimonial and endorsement outreach rows planned for proof acquisition</span></div>
+        </div>
       </div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-icon" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.2)">⚙️</div>
-      <div class="flow-body">
-        <div class="flow-title">24-hour campaign analysis</div>
-        <div class="flow-desc">System crawls spend patterns, keyword performance, audience overlap, conversion funnels, and tracking implementation to identify specific inefficiencies.</div>
-        
+    </section>
+
+    <section class="band" id="offers" aria-labelledby="offers-title">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2 id="offers-title">Training offers for leaders who need usable AI systems.</h2>
+          <p class="section-lede">
+            This is not prompt-tip training. The work is built around executive adoption,
+            marketing intelligence, proof loops, data cleanup, and repeatable agent workflows.
+          </p>
+        </div>
+        <div class="offer-grid">
+          <article class="card">
+            <h3>C-suite AI operating brief</h3>
+            <p>A practical leadership session that maps where AI should sit in the company, what data should feed it, and which risks need controls before scaling.</p>
+            <div class="tag-row"><span class="tag">90 minutes</span><span class="tag">Executive team</span><span class="tag">Decision map</span></div>
+          </article>
+          <article class="card">
+            <h3>AI build sprint workshop</h3>
+            <p>A hands-on workshop where teams build a working workflow from their own data, documents, content, tools, and approvals.</p>
+            <div class="tag-row"><span class="tag">Half day</span><span class="tag">Operators</span><span class="tag">Working prototype</span></div>
+          </article>
+          <article class="card">
+            <h3>Marketing systems seminar</h3>
+            <p>A seminar for agencies and growth teams on advertising audits, tracking cleanup, CRM automation, and content engines that create reusable proof.</p>
+            <div class="tag-row"><span class="tag">Keynote</span><span class="tag">Agency teams</span><span class="tag">Playbooks</span></div>
+          </article>
+        </div>
       </div>
-    </div>
-    <div class="flow-step">
-      <div class="flow-icon" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2)">📤</div>
-      <div class="flow-body">
-        <div class="flow-title">Audit report with actions</div>
-        <div class="flow-desc">User receives structured findings showing exact problems (e.g., 'keyword X has 40% higher CPC than Y'), root causes, and prioritized fixes.</div>
-        
+    </section>
+
+    <section id="proof" aria-labelledby="proof-title">
+      <div class="section-inner split">
+        <div>
+          <p class="eyebrow" style="color: var(--gold);">Proof base</p>
+          <h2 id="proof-title">From client work and content debt into training-grade evidence.</h2>
+          <p class="section-lede">
+            The sprint captured what was previously scattered across websites, social accounts,
+            videos, testimonials, and project folders. The next step is turning that into public
+            proof, outreach, and teachable frameworks.
+          </p>
+          <div class="timeline">
+            <div class="timeline-item"><strong>Advertising Report Card</strong><p>Campaign audits, paid media analysis, tracking fixes, web design, CRM workflows, and agency training.</p></div>
+            <div class="timeline-item"><strong>AI Brain Builders</strong><p>Conference and workshop material for practical AI collaboration and prototype creation.</p></div>
+            <div class="timeline-item"><strong>Therapy PC</strong><p>Healthcare-adjacent web and systems work that shows how operational websites can look sharper and clearer.</p></div>
+            <div class="timeline-item"><strong>Failure Trucks</strong><p>Logistics and moving-industry automation ideas that connect CRM, marketing, routing, and operations.</p></div>
+          </div>
+        </div>
+        <figure class="media-frame">
+          <img src="assets/advertising-report-card-logo.png" alt="Advertising Report Card logo">
+        </figure>
       </div>
-    </div></div>
+    </section>
+
+    <section class="band" id="brands" aria-labelledby="brands-title">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2 id="brands-title">One coherent story across the brands.</h2>
+          <p class="section-lede">
+            The updated positioning connects the daily work to a larger executive-training lane:
+            teach companies how to make AI useful, governed, and attached to real business data.
+          </p>
+        </div>
+        <div class="brand-grid">
+          <article class="card"><h3>Advertising Report Card</h3><p>Advertising audits, attribution, optimization, whitelabel support, and campaign education.</p></article>
+          <article class="card"><h3>AI Brain Builders</h3><p>Workshops and live build sessions that turn AI from abstract interest into working prototypes.</p></article>
+          <article class="card"><h3>StackPack</h3><p>Community and collaboration infrastructure for builders, marketers, operators, and automation teams.</p></article>
+          <article class="card"><h3>Therapy PC</h3><p>Sharper web presence and professional service workflows for healthcare and therapy operators.</p></article>
+          <article class="card"><h3>Failure Trucks</h3><p>Logistics-side operating ideas for lead flow, CRM discipline, dispatch support, and moving-industry systems.</p></article>
+          <article class="card"><h3>Open source systems</h3><p>Agent workflows, browser automation, credential routing, GitHub review loops, and reusable documentation patterns.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="content-engine" aria-labelledby="content-engine-title">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2 id="content-engine-title">AI makes the old work compound.</h2>
+          <p class="section-lede">
+            The portfolio sprint created a repeatable loop: inventory the public proof, extract
+            reusable ideas, build profile-ready assets, ask the right people for endorsements,
+            and keep the website as the main content hub.
+          </p>
+        </div>
+        <div class="proof-grid">
+          <article class="card">
+            <h3>Profile copy matrix</h3>
+            <p>LinkedIn, X, YouTube, Instagram, Facebook, GitHub, and website copy can be kept consistent while still matching each channel's character limits and edit fields.</p>
+          </article>
+          <article class="card">
+            <h3>Asset placeholder queue</h3>
+            <p>Profile photos, banners, square images, vertical clips, landscape videos, and speaker assets are tracked with dimensions, source candidates, and missing inputs.</p>
+          </article>
+          <article class="card">
+            <h3>Outreach proof engine</h3>
+            <p>LinkedIn endorsements, client testimonials, AI Brain Builders attendee quotes, and ARC partner reviews are now organized as specific outreach requests.</p>
+          </article>
+          <article class="card">
+            <h3>Public sprint documentation</h3>
+            <p>The sanitized sprint index explains what was captured, what belongs in the repo, and what stays out until reviewed.</p>
+            <div class="tag-row"><a class="tag" href="digital-footprint-sprint/">Open sprint docs</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="section-inner">
+        <h2 id="cta-title">Bring an AI-first operator into the room before the next tool decision becomes another disconnected project.</h2>
+        <div class="hero-actions">
+          <a class="button primary" href="https://www.linkedin.com/in/michaelensor/">Start on LinkedIn</a>
+          <a class="button secondary" href="https://github.com/arc-web/portfolio">View GitHub repo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="section-inner">
+      Public portfolio for Michael Ensor. Sprint documentation is maintained in this repository and excludes raw subtitle archives, private account data, and credential material.
     </div>
-  </div>
-
-<div class="slide" id="slide-5">
-    
-    <div class="blob" style="width:413.2284013842085px;height:568.7357889622182px;background:var(--primary);top:-98.16690434582205px;right:-70.29069621739544px;opacity:0.07"></div>
-    <div class="blob" style="width:335.63138731977324px;height:381.6974510639568px;background:var(--accent);bottom:-91.9694513020088px;right:-75.58146051491084px;opacity:0.06"></div>
-    <div class="slide-content">
-      <div class="eyebrow">What it does</div>
-      <h2>Core <span class="grad">capabilities</span></h2>
-      <div class="line"></div>
-      <div class="cards">
-    <div class="card">
-      <span class="card-icon">⚡</span>
-      <div class="card-title">Fast</div>
-      <div class="card-desc">Optimized for speed and efficiency.</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">🎯</span>
-      <div class="card-title">Reliable</div>
-      <div class="card-desc">Built to work consistently.</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">🔌</span>
-      <div class="card-title">Integrates</div>
-      <div class="card-desc">Works with your existing tools.</div>
-    </div></div>
-    </div>
-  </div>
-
-<div class="slide" id="slide-6">
-    
-    <div class="blob" style="width:531.0524274046363px;height:400.89610266819733px;background:var(--primary);top:-111.12205285777017px;right:-97.11517873996638px;opacity:0.07"></div>
-    <div class="blob" style="width:333.7675326968775px;height:329.66729849742904px;background:var(--accent);bottom:-71.78183000350641px;left:-68.07725725149353px;opacity:0.06"></div>
-    <div class="slide-content">
-      <blockquote>We show you exactly where your ad budget is leaking and why—not just that it is.</blockquote>
-      <div class="line" style="margin-top:48px"></div>
-      <div class="sub">arc-web/portfolio</div>
-    </div>
-  </div>
-
-<div class="slide" id="slide-7">
-    
-    <div class="blob" style="width:469.6125544014378px;height:506.372294063847px;background:var(--primary);top:-159.25441908415814px;right:-101.34330493226982px;opacity:0.07"></div>
-    <div class="blob" style="width:428.01346544821956px;height:346.7934813642343px;background:var(--accent);bottom:-92.00509152853971px;left:-77.85618551472746px;opacity:0.06"></div>
-    <div class="slide-content">
-      <div class="eyebrow">Codebase</div>
-      <h2>Built with <span class="grad">care</span></h2>
-      <div class="line"></div>
-      <div class="cards">
-    <div class="card">
-      <span class="card-icon">💻</span>
-      <div class="card-title">JavaScript</div>
-      <div class="card-desc">Built in JavaScript for type safety and reliability.</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">🏗️</span>
-      <div class="card-title">Architecture</div>
-      <div class="card-desc">Dashboard</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">📦</span>
-      <div class="card-title">Key deps</div>
-      <div class="card-desc">Claude Code</div>
-    </div>
-    <div class="card">
-      <span class="card-icon">🔓</span>
-      <div class="card-title">Open Source (MIT / PolyForm)</div>
-      <div class="card-desc">Fork it, extend it, ship it. It's yours.</div>
-    </div></div>
-    </div>
-  </div>
-
-<div class="slide" id="slide-8">
-    
-    <div class="blob" style="width:432.1087157011296px;height:552.6300214243105px;background:var(--primary);top:-100.36829633309722px;left:-69.96022402698867px;opacity:0.07"></div>
-    <div class="blob" style="width:354.82369312899874px;height:385.9066467813073px;background:var(--accent);bottom:-95.50802239831424px;right:-42.57765094071007px;opacity:0.06"></div>
-    <div class="slide-content">
-      <div class="eyebrow">Built by</div>
-      <h2>Mike Ensor<br><span class="grad">Arc Web</span></h2>
-      <div class="sub">AI automation, marketing technology, building tools that work.</div>
-      <div class="body-text">Mike builds open-source AI tools for agencies, marketers, and operators who are done waiting for software to catch up. All Arc Web projects are open source by default — fork them, extend them, ship them.</div>
-    </div>
-  </div>
-</div>
-
-<div id="nav"></div>
-<div id="counter">1 / 8</div>
-<div id="hint">\u2190 \u2192 arrow keys &nbsp;|&nbsp; P to play &nbsp;|&nbsp; M to mute<span id="mute-dot"></span></div>
-<div id="progress-bar"></div>
-<button id="play-btn" aria-label="Play slideshow" onclick="togglePlay()">
-  <svg id="play-icon" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 14,8 3,15"/></svg>
-  <svg id="pause-icon" viewBox="0 0 16 16" fill="currentColor" style="display:none"><rect x="2" y="1" width="4" height="14" rx="1"/><rect x="10" y="1" width="4" height="14" rx="1"/></svg>
-  <span id="play-label">Play</span>
-</button>
-
-<script>
-// Particles
-const canvas=document.getElementById('bg'),ctx=canvas.getContext('2d');let pts=[];
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
-resize();window.addEventListener('resize',resize);
-const pColors=['123,47,190','245,166,35','20,184,166'];
-for(let i=0;i<50;i++)pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.2+0.3,dx:(Math.random()-0.5)*0.25,dy:(Math.random()-0.5)*0.25,a:Math.random()*0.35+0.04,c:pColors[Math.floor(Math.random()*pColors.length)]});
-function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba('+p.c+','+p.a+')';ctx.fill();p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1});requestAnimationFrame(draw)}
-draw();
-
-// Cursor
-const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-function animC(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animC)}
-animC();
-
-// Slides
-const slides=document.querySelectorAll('.slide'),N=slides.length;
-let cur2=0,busy=false;
-const nav=document.getElementById('nav');
-for(let i=0;i<N;i++){const d=document.createElement('button');d.className='dot'+(i===0?' active':'');d.onclick=()=>go(i);nav.appendChild(d)}
-
-function updateNav(){document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur2));document.getElementById('counter').textContent=(cur2+1)+' / '+N}
-
-function resetSlide(s){const els=s.querySelectorAll('.eyebrow,.line,h1,h2,.sub,.card,.stat,.step,.compare-col,.code-block,blockquote,.hero-badge,.tags-row,.tag,.flow-step,.body-text,.img-wrap,.tl-node,.team-card');gsap.set(els,{opacity:0,clearProps:'transform'})}
-
-function animIn(s,i){
-  const q=sel=>s.querySelectorAll(sel);
-  const tl=gsap.timeline({defaults:{ease:'power3.out'}});
-
-  tl.to(q('.hero-badge'),{opacity:1,y:0,duration:0.5}).from(q('.hero-badge'),{y:16},'<')
-    .to(q('.eyebrow'),{opacity:1,y:0,duration:0.5},'-=0.3').from(q('.eyebrow'),{y:16},'<')
-    .to(q('h1,h2'),{opacity:1,y:0,duration:0.7},'-=0.3').from(q('h1,h2'),{y:30},'<')
-    .to(q('.sub'),{opacity:1,y:0,duration:0.5},'-=0.2').from(q('.sub'),{y:16},'<')
-    .to(q('.line'),{opacity:1,scaleX:1,duration:0.4,transformOrigin:'left'},'-=0.2').from(q('.line'),{scaleX:0},'<')
-    .to(q('.tags-row'),{opacity:1,duration:0.4},'-=0.1');
-
-  const stagger=q('.card,.stat,.step,.flow-step,.tl-node,.team-card');
-  if(stagger.length){
-    tl.to(stagger,{opacity:1,y:0,duration:0.5,stagger:0.12},'-=0.1').from(stagger,{y:24},'<0.12');
-    const n=Math.min(stagger.length,4);
-    for(let k=0;k<n;k++)sndClink(0.4+k*0.12);
-  }
-
-  const singles=q('.compare-col,.code-block,blockquote,.body-text,.img-wrap');
-  if(singles.length){
-    tl.to(singles,{opacity:1,y:0,duration:0.6},'-=0.1').from(singles,{y:24},'<');
-    sndClink(0.4);
-  }
-
-  const tags=q('.tag');
-  if(tags.length)tl.to(tags,{opacity:1,duration:0.3,stagger:0.08},'-=0.2');
-}
-
-function go(idx){
-  if(idx===cur2||busy||idx<0||idx>=N)return;busy=true;
-  sndTransition();
-  const ov=document.getElementById('overlay');
-  gsap.timeline()
-    .to(ov,{opacity:1,duration:0.2,ease:'power2.in'})
-    .call(()=>{slides[cur2].classList.remove('active');resetSlide(slides[idx]);slides[idx].classList.add('active');cur2=idx;updateNav()})
-    .to(ov,{opacity:0,duration:0.3,ease:'power2.out'})
-    .call(()=>{animIn(slides[idx],idx);busy=false});
-}
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){stopPlay();go(cur2+1);}
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){stopPlay();go(cur2-1);}
-  if(e.key==='p'||e.key==='P')togglePlay();
-  if(e.key==='m'||e.key==='M')toggleMute();
-});
-
-// Audio engine (Web Audio API, zero external deps)
-let _ac=null,muted=false;
-function _ctx(){
-  if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();
-  if(_ac.state==='suspended')_ac.resume();
-  return _ac;
-}
-// unlock on first interaction
-['click','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{try{_ctx();}catch(e){}},{once:true,passive:true}));
-
-function sndTransition(){
-  if(muted)return;
-  try{
-    const a=_ctx(),t=a.currentTime;
-    // primary sweep: 180 -> 520 Hz sine
-    const o1=a.createOscillator(),g1=a.createGain();
-    o1.connect(g1);g1.connect(a.destination);
-    o1.type='sine';
-    o1.frequency.setValueAtTime(180,t);
-    o1.frequency.exponentialRampToValueAtTime(520,t+0.18);
-    g1.gain.setValueAtTime(0,t);g1.gain.linearRampToValueAtTime(0.055,t+0.02);
-    g1.gain.exponentialRampToValueAtTime(0.001,t+0.28);
-    o1.start(t);o1.stop(t+0.3);
-    // detuned twin for richness
-    const o2=a.createOscillator(),g2=a.createGain();
-    o2.connect(g2);g2.connect(a.destination);
-    o2.type='sine';
-    o2.frequency.setValueAtTime(185,t);
-    o2.frequency.exponentialRampToValueAtTime(530,t+0.2);
-    g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(0.025,t+0.03);
-    g2.gain.exponentialRampToValueAtTime(0.001,t+0.3);
-    o2.start(t);o2.stop(t+0.32);
-    // soft sub thud
-    const o3=a.createOscillator(),g3=a.createGain();
-    o3.connect(g3);g3.connect(a.destination);
-    o3.type='sine';o3.frequency.value=60;
-    g3.gain.setValueAtTime(0.05,t);g3.gain.exponentialRampToValueAtTime(0.001,t+0.12);
-    o3.start(t);o3.stop(t+0.14);
-  }catch(e){}
-}
-
-function sndClink(delay){
-  if(muted)return;
-  try{
-    const a=_ctx(),t=a.currentTime+(delay||0);
-    const o=a.createOscillator(),f=a.createBiquadFilter(),g=a.createGain();
-    o.connect(f);f.connect(g);g.connect(a.destination);
-    f.type='bandpass';f.frequency.value=2400;f.Q.value=10;
-    o.type='triangle';
-    o.frequency.setValueAtTime(1900,t);
-    o.frequency.exponentialRampToValueAtTime(1200,t+0.07);
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.045,t+0.004);
-    g.gain.exponentialRampToValueAtTime(0.001,t+0.13);
-    o.start(t);o.stop(t+0.15);
-  }catch(e){}
-}
-
-function sndToggle(on){
-  if(muted)return;
-  try{
-    const a=_ctx();
-    const freqs=on?[400,640]:[640,400];
-    freqs.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g);g.connect(a.destination);
-      o.type='sine';o.frequency.value=freq;
-      const t=a.currentTime+i*0.065;
-      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.04,t+0.006);
-      g.gain.exponentialRampToValueAtTime(0.001,t+0.09);
-      o.start(t);o.stop(t+0.1);
-    });
-  }catch(e){}
-}
-
-const muteDot=document.getElementById('mute-dot');
-function toggleMute(){
-  muted=!muted;
-  muteDot.classList.toggle('active',muted);
-  if(muted){stopDrone();}else{if(playing)startDrone();sndToggle(true);}
-}
-
-// ─── Meditation Drone ────────────────────────────────────────────────────────
-// Root: 136.1 Hz — the "Om" / Earth-year frequency (just-intonation anchor).
-// Harmonics built on pure integer ratios: octave 2:1, fifth 3:2, fourth 4:3.
-// Chord sequence moves slowly between two peaceful voicings every ~20 s:
-//   State A — open fifth (root + fifth)      warm, grounding
-//   State B — sus4 colour (root + fourth)    airy, open, unresolved peace
-// Binaural shimmer: each voice has a left and right oscillator detuned by 6 Hz
-//   (theta-range beating) — produces a gentle inner pulse felt more than heard.
-// Breathing LFO at 0.08 Hz (~12 s per cycle) swells volume like a slow breath.
-// Reverb: two-tap feedback delay (0.28 s / 0.47 s), lowpass at 900 Hz, 40% wet.
-
-const _OM   = 136.1;                  // root Hz
-const _5TH  = _OM  * 1.5;            // perfect fifth  (3:2)  = 204.15 Hz
-const _4TH  = _OM  * (4/3);          // perfect fourth (4:3)  = 181.47 Hz
-const _OCT  = _OM  * 2;              // octave  (2:1)         = 272.2  Hz
-const _SUB  = _OM  / 2;              // sub octave            = 68.05  Hz
-const _BIN  = 0.7;                   // binaural beat gap (Hz) — slow, smooth pulse
-
-// Chord states: array of {freq, vol} voice definitions
-const _CHORDS = [
-  // State A — open fifth: sub + root×2 + fifth + octave
-  [ {f:_SUB, v:0.20}, {f:_OM, v:0.45}, {f:_OM, v:0.28}, {f:_5TH, v:0.18}, {f:_OCT, v:0.10} ],
-  // State B — sus4 colour: sub + root×2 + fourth + octave
-  [ {f:_SUB, v:0.16}, {f:_OM, v:0.40}, {f:_OM, v:0.24}, {f:_4TH, v:0.22}, {f:_OCT, v:0.12} ],
-];
-const _CHORD_HOLD = 22;   // seconds per chord state
-const _MORPH_TIME = 8;    // seconds to crossfade between states
-
-let _drone=null;
-
-function startDrone(){
-  if(muted||_drone)return;
-  try{
-    const a=_ctx(),t=a.currentTime;
-
-    // master
-    const master=a.createGain();
-    master.connect(a.destination);
-    master.gain.setValueAtTime(0,t);
-    master.gain.linearRampToValueAtTime(0.075,t+3.0);
-
-    // breathing LFO — 0.028 Hz (~36 s cycle), depth ±0.004 — barely perceptible swell,
-    // just enough to prevent the drone feeling completely static
-    const breathOsc=a.createOscillator(),breathGain=a.createGain();
-    breathOsc.type='sine';breathOsc.frequency.value=0.028;breathGain.gain.value=0.004;
-    breathOsc.connect(breathGain);breathGain.connect(master.gain);breathOsc.start(t);
-
-    // reverb — two feedback delay taps through a shared lowpass
-    function makeTap(delayT,fbAmt){
-      const d=a.createDelay(2.0),fb=a.createGain(),lp=a.createBiquadFilter();
-      d.delayTime.value=delayT;fb.gain.value=fbAmt;
-      lp.type='lowpass';lp.frequency.value=900;
-      d.connect(lp);lp.connect(fb);fb.connect(d);
-      const w=a.createGain();w.gain.value=0.2;d.connect(w);w.connect(master);
-      return d; // input node
-    }
-    const tap1=makeTap(0.28,0.35);
-    const tap2=makeTap(0.47,0.28);
-
-    // per-voice gain nodes (one per voice slot, index matches _CHORDS rows)
-    const voiceGains=_CHORDS[0].map(({v})=>{
-      const g=a.createGain();g.gain.value=v;g.connect(master);g.connect(tap1);g.connect(tap2);return g;
-    });
-
-    // per-voice binaural pair: L oscillator at f, R oscillator at f+_BIN
-    // merged through a stereo splitter for the beating effect.
-    // Each voice also gets a slow pitch-drift LFO (different rates per voice so
-    // they never pulse in sync — organic shimmer, no amplitude pumping).
-    const _driftRates=[0.031,0.019,0.041,0.027,0.023]; // Hz — all prime-ish, never sync
-    const _driftDepths=[1.2,0.8,1.6,1.0,0.9];           // cents — microtonal, subliminal
-    const oscs=voiceGains.map((_,i)=>{
-      const merger=a.createChannelMerger(2);
-      const oL=a.createOscillator(),oR=a.createOscillator();
-      oL.type='sine';oR.type='sine';
-      // pitch drift via detune modulation
-      const driftOsc=a.createOscillator(),driftGain=a.createGain();
-      driftOsc.type='sine';driftOsc.frequency.value=_driftRates[i]||0.03;
-      driftGain.gain.value=_driftDepths[i]||3;
-      driftOsc.connect(driftGain);
-      driftGain.connect(oL.detune);driftGain.connect(oR.detune);
-      driftOsc.start(t+i*1.3); // stagger start so LFOs begin at different phases
-      oL.connect(merger,0,0);oR.connect(merger,0,1);
-      merger.connect(voiceGains[i]);
-      return {oL,oR,driftOsc};
-    });
-
-    // set initial frequencies and start
-    function applyChord(state,instant){
-      _CHORDS[state].forEach(({f,v},i)=>{
-        const {oL,oR}=oscs[i],ac=a.currentTime;
-        if(instant){
-          oL.frequency.setValueAtTime(f,ac);
-          oR.frequency.setValueAtTime(f+_BIN,ac);
-          voiceGains[i].gain.setValueAtTime(v,ac);
-        }else{
-          oL.frequency.exponentialRampToValueAtTime(f,ac+_MORPH_TIME);
-          oR.frequency.exponentialRampToValueAtTime(f+_BIN,ac+_MORPH_TIME);
-          voiceGains[i].gain.linearRampToValueAtTime(v,ac+_MORPH_TIME);
-        }
-      });
-    }
-    oscs.forEach(({oL,oR})=>{oL.start(t);oR.start(t);});
-    applyChord(0,true);
-
-    // chord cycle timer
-    let _chordState=0;
-    function cycleChord(){
-      _chordState=1-_chordState;
-      applyChord(_chordState,false);
-      _drone._cycleTimer=setTimeout(cycleChord,(_CHORD_HOLD+_MORPH_TIME)*1000);
-    }
-    const cycleTimer=setTimeout(cycleChord,_CHORD_HOLD*1000);
-
-    _drone={master,breathOsc,oscs,voiceGains,_cycleTimer:cycleTimer};
-  }catch(e){}
-}
-
-function stopDrone(){
-  if(!_drone)return;
-  try{
-    clearTimeout(_drone._cycleTimer);
-    const a=_ctx(),t=a.currentTime;
-    _drone.master.gain.cancelScheduledValues(t);
-    _drone.master.gain.setValueAtTime(_drone.master.gain.value,t);
-    _drone.master.gain.linearRampToValueAtTime(0,t+2.2);
-    const d=_drone;_drone=null;
-    setTimeout(()=>{
-      try{d.breathOsc.stop();d.oscs.forEach(({oL,oR,driftOsc})=>{oL.stop();oR.stop();driftOsc.stop();});}catch(e){}
-    },2400);
-  }catch(e){}
-}
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Autoplay
-const AUTOPLAY_MS=5000;
-let playTimer=null,playRaf=null,playStart=null,playing=false;
-const pb=document.getElementById('progress-bar');
-const btn=document.getElementById('play-btn');
-const playIcon=document.getElementById('play-icon');
-const pauseIcon=document.getElementById('pause-icon');
-const playLabel=document.getElementById('play-label');
-
-function setPlayUI(on){
-  playing=on;
-  sndToggle(on);
-  btn.classList.toggle('playing',on);
-  playIcon.style.display=on?'none':'';
-  pauseIcon.style.display=on?'':'none';
-  playLabel.textContent=on?'Pause':'Play';
-  if(!on){pb.style.width='0%';pb.style.transition='none';}
-}
-
-function startProgress(){
-  playStart=performance.now();
-  function tick(){
-    if(!playing)return;
-    const pct=Math.min(100,(performance.now()-playStart)/AUTOPLAY_MS*100);
-    pb.style.transition='none';
-    pb.style.width=pct+'%';
-    if(pct<100){playRaf=requestAnimationFrame(tick);}
-  }
-  playRaf=requestAnimationFrame(tick);
-}
-
-function scheduleNext(){
-  playTimer=setTimeout(()=>{
-    if(!playing)return;
-    const next=(cur2+1)%N;
-    // wrap-around: pause at end instead of looping
-    if(next===0&&cur2===N-1){stopPlay();pb.style.width='0%';return;}
-    go(next);
-    pb.style.transition='none';pb.style.width='0%';
-    playStart=performance.now();
-    startProgress();
-    scheduleNext();
-  },AUTOPLAY_MS);
-}
-
-function startPlay(){
-  if(playing)return;
-  setPlayUI(true);
-  startDrone();
-  playStart=performance.now();
-  startProgress();
-  scheduleNext();
-}
-
-function stopPlay(){
-  if(!playing)return;
-  clearTimeout(playTimer);
-  cancelAnimationFrame(playRaf);
-  playTimer=null;playRaf=null;
-  setPlayUI(false);
-  stopDrone();
-}
-
-function togglePlay(){playing?stopPlay():startPlay();}
-
-window.addEventListener('load',()=>{resetSlide(slides[0]);setTimeout(()=>animIn(slides[0],0),150);updateNav();});
-</script>
+  </footer>
 </body>
 </html>
